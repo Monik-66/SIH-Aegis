@@ -1,0 +1,11 @@
+test_aasist_wav.py
+        ↓
+preprocessing.py
+        ↓
+aasist_detector.py
+        ↓
+AASIST.py
+        ↓
+AASIST.pth
+        ↓
+BONAFIDE / REAL 
