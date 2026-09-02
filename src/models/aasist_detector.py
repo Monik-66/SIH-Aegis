@@ -1,3 +1,4 @@
+import numpy as np
 import sys
 import torch
 
@@ -44,20 +45,22 @@ class AASISTDetector:
     def prepare_audio(self, audio):
         """
         Make audio exactly 64600 samples.
+
+        AASIST expects mono float32 audio at 16 kHz.
+        If audio is longer, use the first 64600 samples.
+        If shorter, repeat the audio until 64600 samples.
         """
 
-        if len(audio) > AASIST_SAMPLE_LENGTH:
-            audio = audio[:AASIST_SAMPLE_LENGTH]
+        audio = audio.astype(np.float32)
 
-        elif len(audio) < AASIST_SAMPLE_LENGTH:
-            padding = AASIST_SAMPLE_LENGTH - len(audio)
+        if len(audio) >= AASIST_SAMPLE_LENGTH:
+            return audio[:AASIST_SAMPLE_LENGTH]
 
-            audio = torch.nn.functional.pad(
-                torch.from_numpy(audio),
-                (0, padding)
-            ).numpy()
+        repeats = int(np.ceil(AASIST_SAMPLE_LENGTH / len(audio)))
 
-        return audio
+        audio = np.tile(audio, repeats)
+
+        return audio[:AASIST_SAMPLE_LENGTH]
 
     def predict(self, audio):
         """
