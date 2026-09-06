@@ -1,9 +1,4 @@
 import streamlit as st
-import sys
-import wave
-import numpy as np
-
-sys.path.insert(0, ".")
 
 from src.pipeline.detector_pipeline import DetectorPipeline
 
@@ -49,37 +44,11 @@ if audio_file:
 
         with st.spinner("Analyzing audio..."):
 
-            with wave.open(audio_file, "rb") as wav:
-
-                sample_rate = wav.getframerate()
-                channels = wav.getnchannels()
-
-                frames = wav.readframes(
-                    wav.getnframes()
-                )
-
-            audio = np.frombuffer(
-                frames,
-                dtype=np.int16
+            result = pipeline.analyze_wav(
+                audio_file
             )
-
-            if channels == 2:
-
-                audio = audio.reshape(-1, 2)
-
-                audio = (
-                    audio.mean(axis=1)
-                    .astype(np.int16)
-                )
-
-            result = pipeline.analyze(
-                audio,
-                sample_rate
-            )
-
 
         st.divider()
-
         st.subheader("Result")
 
         if result["prediction"] == "SPOOF":
@@ -100,18 +69,17 @@ if audio_file:
                 f"{result['bonafide_score'] * 100:.2f}%"
             )
 
-
         with st.expander("Technical Details"):
 
             st.write(
                 "Sample rate:",
-                sample_rate,
+                result["sample_rate"],
                 "Hz"
             )
 
             st.write(
                 "Channels:",
-                channels
+                result["channels"]
             )
 
             st.write(
