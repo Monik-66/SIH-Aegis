@@ -1,11 +1,27 @@
-test_aasist_wav.py
-        ↓
-preprocessing.py
-        ↓
-aasist_detector.py
-        ↓
-AASIST.py
-        ↓
-AASIST.pth
-        ↓
-BONAFIDE / REAL
+                         ┌──────────────────┐
+                         │    Streamlit     │
+                         │      app.py      │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │  DetectorPipeline   │
+                       │ detector_pipeline.py│
+                       └──────────┬──────────┘
+                                  │
+                       ┌──────────▼──────────┐
+                       │     AudioLoader     │
+                       │   audio_loader.py   │
+                       └──────────┬──────────┘
+                                  │
+                       ┌──────────▼──────────┐
+                       │    Preprocessing    │
+                       │   preprocessing.py  │
+                       └──────────┬──────────┘
+                                  │
+                 ┌────────────────┴────────────────┐
+                 ▼                                 ▼
+          ┌──────────────┐                  ┌──────────────┐
+          │    AASIST    │                  │ MFCC + GNB   │
+          │   baseline   │                  │   primary    │
+          └──────────────┘                  └──────────────┘
