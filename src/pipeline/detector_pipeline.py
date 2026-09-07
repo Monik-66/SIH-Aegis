@@ -1,10 +1,9 @@
 import sys
-import wave
-import numpy as np
 
 sys.path.insert(0, "src/audio")
 sys.path.insert(0, "src/models")
 
+from audio_loader import AudioLoader
 from preprocessing import preprocess_audio
 from aasist_detector import AASISTDetector
 
@@ -12,34 +11,8 @@ from aasist_detector import AASISTDetector
 class DetectorPipeline:
 
     def __init__(self, model_path):
+        self.audio_loader = AudioLoader()
         self.detector = AASISTDetector(model_path)
-
-    def load_wav(self, wav_file):
-        """
-        Load a WAV file and convert it to mono int16 audio.
-        """
-
-        with wave.open(wav_file, "rb") as wav:
-
-            sample_rate = wav.getframerate()
-            channels = wav.getnchannels()
-            frames = wav.readframes(wav.getnframes())
-
-        audio = np.frombuffer(
-            frames,
-            dtype=np.int16
-        )
-
-        if channels == 2:
-
-            audio = audio.reshape(-1, 2)
-
-            audio = (
-                audio.mean(axis=1)
-                .astype(np.int16)
-            )
-
-        return audio, sample_rate, channels
 
     def analyze(self, audio, sample_rate):
         """
@@ -78,7 +51,7 @@ class DetectorPipeline:
         Load and analyze a WAV file.
         """
 
-        audio, sample_rate, channels = self.load_wav(
+        audio, sample_rate, channels = self.audio_loader.load_wav(
             wav_file
         )
 
