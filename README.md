@@ -5,3 +5,5 @@ AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Att
 ## Project Status
 
 Stage 1 - Voice cloning detection prototype
+
+Stage 2 - Android app Integration
